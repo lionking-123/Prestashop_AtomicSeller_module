@@ -59,6 +59,8 @@ class AtomicSeller extends Module {
     public function install() {
         Configuration::updateValue('WS_TOKEN', 'MIJIUGTIUY976R976F42UV087JIYUUYVO8GYPGLIE2PAB');
         Configuration::updateValue('WS_STOREKEY', 'MYSTORE');
+        Configuration::updateValue('EMAIL_TITLE_MODEL', 'Return label regarding order MKUGH1.');
+        Configuration::updateValue('EMAIL_CONTENT_MODEL', 'Email content;');
 
         return (
             parent::install()
@@ -70,6 +72,8 @@ class AtomicSeller extends Module {
     public function uninstall() {
         Configuration::deleteByName('WS_TOKEN');
         Configuration::deleteByName('WS_STOREKEY');
+        Configuration::deleteByName('EMAIL_TITLE_MODEL');
+        Configuration::deleteByName('EMAIL_CONTENT_MODEL');
 
         if(parent::uninstall()) {
             $this->uninstallTab('AdminAtomicSeller');
@@ -131,7 +135,6 @@ class AtomicSeller extends Module {
         Media::addJsDef(array(
             'psr_controller_atomicseller_url' => $this->context->link->getAdminLink('AdminAtomicSeller'),
             'psr_controller_atomicseller' => 'AdminAtomicSeller',
-            'psr_lang' => (int) Configuration::get('PS_LANG_DEFAULT'),
             'connection_error' => $this->trans('Oops... looks like an error occurred on WebService connection!', array(), 'Modules.AtomicSeller.Admin'),
             'psre_success' => $this->trans('Configuration updated successfully!', array(), 'Modules.AtomicSeller.Admin'),
         ));
@@ -144,6 +147,8 @@ class AtomicSeller extends Module {
         $this->context->smarty->assign(array(
             'ws_token' => Configuration::get('WS_TOKEN'),
             'ws_storekey' => Configuration::get('WS_STOREKEY'),
+            'email_title' => Configuration::get('EMAIL_TITLE_MODEL'),
+            'email_content' => Configuration::get('EMAIL_CONTENT_MODEL'),
             'logo_path' => $this->logo_path,
         ));
 
