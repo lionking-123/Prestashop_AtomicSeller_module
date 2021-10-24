@@ -6,29 +6,29 @@
     <div class="panel-body">
         <div class="clearfix">
 
-            <div class="form-group">
-                <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
+            <div class="row form-group">
+                <div class="col-xs-5 col-sm-4 col-md-3 col-lg-3">
                     <div class="text-right">
                         <label class="control-label">
                             {l s='Webservice Token : ' d='Modules.AtomicSeller.Admin'}
                         </label>
                     </div>
                 </div>
-                <div class="col-xs-7 col-sm-8 col-md-9 col-lg-9">
+                <div class="col-xs-6 col-sm-7 col-md-8 col-lg-8">
                     <input type="text" id="wsToken" name="WS_TOKEN"
                            value="{if isset($ws_token)}{$ws_token|escape:'htmlall':'UTF-8'}{/if}" />
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2">
+            <div class="row form-group">
+                <div class="col-xs-5 col-sm-4 col-md-3 col-lg-3">
                     <div class="text-right">
                         <label class="control-label">
                             {l s='Webservice Storekey : ' d='Modules.AtomicSeller.Admin'}
                         </label>
                     </div>
                 </div>
-                <div class="col-xs-7 col-sm-8 col-md-9 col-lg-9">
+                <div class="col-xs-6 col-sm-7 col-md-8 col-lg-8">
                     <input type="text" id="wsStorekey" name="WS_STOREKEY"
                            value="{if isset($ws_storekey)}{$ws_storekey|escape:'htmlall':'UTF-8'}{/if}" />
                 </div>

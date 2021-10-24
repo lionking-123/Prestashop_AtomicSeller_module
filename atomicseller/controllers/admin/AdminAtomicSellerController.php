@@ -1,6 +1,6 @@
 <?php
 
-class AdminBlockListingController extends ModuleAdminController {
+class AdminAtomicSellerController extends ModuleAdminController {
 
     // Ajax response render
     protected function ajaxRenderJson($content) {
@@ -68,7 +68,7 @@ class AdminBlockListingController extends ModuleAdminController {
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
         $resp = json_encode(curl_exec($curl));
-        $statusCode = curl_getinfo($curl, CURLINFO_HTP_CODE);
+        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         curl_close($curl);
 
         return $statusCode == 200 ? $resp : "";

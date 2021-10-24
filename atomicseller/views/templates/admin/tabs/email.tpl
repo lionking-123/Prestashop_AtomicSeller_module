@@ -6,15 +6,15 @@
     <div class="panel-body">
         <div class="clearfix">
 
-            <div class="form-group">
-                <div class="col-xs-7 col-sm-8 col-md-9 col-lg-9">
+            <div class="row form-group">
+                <div class="col-md-10 col-md-offset-1">
                     <input type="text" id="title" name="EMAIL_TITLE_MODEL"
                            value="{if isset($email_title)}{$email_title|escape:'htmlall':'UTF-8'}{/if}" />
                 </div>
             </div>
 
-            <div class="form-group">
-                <div class="col-xs-7 col-sm-8 col-md-9 col-lg-9">
+            <div class="row form-group">
+                <div class="col-md-10 col-md-offset-1">
                     <textarea type="text" id="content" name="WS_STOREKEY" style="height:200px;">
                         {if isset($email_content)}{$email_content|escape:'htmlall':'UTF-8'}{/if}
                     </textarea>

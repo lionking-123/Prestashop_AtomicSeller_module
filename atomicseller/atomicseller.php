@@ -135,8 +135,10 @@ class AtomicSeller extends Module {
         Media::addJsDef(array(
             'psr_controller_atomicseller_url' => $this->context->link->getAdminLink('AdminAtomicSeller'),
             'psr_controller_atomicseller' => 'AdminAtomicSeller',
+            'connection_success' => $this->trans('Webservice connection tested successfully!', array(), 'Modules.AtomicSeller.Admin'),
             'connection_error' => $this->trans('Oops... looks like an error occurred on WebService connection!', array(), 'Modules.AtomicSeller.Admin'),
             'psre_success' => $this->trans('Configuration updated successfully!', array(), 'Modules.AtomicSeller.Admin'),
+            'active_error' => $this->trans('Oops... looks like an error occurred!', array(), 'Modules.AtomicSeller.Admin'),
         ));
     }
 
