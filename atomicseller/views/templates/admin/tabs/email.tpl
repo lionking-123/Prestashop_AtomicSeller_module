@@ -8,15 +8,15 @@
 
             <div class="row form-group">
                 <div class="col-md-10 col-md-offset-1">
-                    <input type="text" id="title" name="EMAIL_TITLE_MODEL"
+                    <input type="text" id="eTitle" name="EMAIL_TITLE_MODEL"
                            value="{if isset($email_title)}{$email_title|escape:'htmlall':'UTF-8'}{/if}" />
                 </div>
             </div>
 
             <div class="row form-group">
                 <div class="col-md-10 col-md-offset-1">
-                    <textarea type="text" id="content" name="WS_STOREKEY" style="height:200px;">
-                        {if isset($email_content)}{$email_content|escape:'htmlall':'UTF-8'}{/if}
+                    <textarea id="eContent" name="EMAIL_CONTENT_MODEL" style="height:200px;">
+{if isset($email_content)}{$email_content|escape:'htmlall':'UTF-8'}{/if}
                     </textarea>
                 </div>
             </div>

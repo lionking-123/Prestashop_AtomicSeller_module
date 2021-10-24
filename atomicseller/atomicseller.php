@@ -41,10 +41,10 @@ class AtomicSeller extends Module {
 
         parent::__construct();
 
-        $this->displayName = $this->l('AtomicSeller');
-        $this->description = $this->l('Show the Order list and details and send details via Email.');
+        $this->displayName = $this->trans('AtomicSeller', array(), 'Modules.AtomicSeller.Admin');
+        $this->description = $this->trans('Show the Order list and details and send details via Email.', array(), 'Modules.AtomicSeller.Admin');
 
-        $this->confirmUninstall = $this->l('Are you sure you want to uninstall?');
+        $this->confirmUninstall = $this->trans('Are you sure you want to uninstall?', array(), 'Modules.AtomicSeller.Admin');
 
         if (!$this->_path) {
             $this->_path = __PS_BASE_URI__ . 'modules/' . $this->name . '/';
@@ -60,7 +60,12 @@ class AtomicSeller extends Module {
         Configuration::updateValue('WS_TOKEN', 'MIJIUGTIUY976R976F42UV087JIYUUYVO8GYPGLIE2PAB');
         Configuration::updateValue('WS_STOREKEY', 'MYSTORE');
         Configuration::updateValue('EMAIL_TITLE_MODEL', 'Return label regarding order MKUGH1.');
-        Configuration::updateValue('EMAIL_CONTENT_MODEL', 'Email content;');
+        Configuration::updateValue('EMAIL_CONTENT_MODEL', 'Dear customer,
+
+Please find in attachment your return label.
+
+Kind regards.
+The customer service.');
 
         return (
             parent::install()
@@ -136,9 +141,8 @@ class AtomicSeller extends Module {
             'psr_controller_atomicseller_url' => $this->context->link->getAdminLink('AdminAtomicSeller'),
             'psr_controller_atomicseller' => 'AdminAtomicSeller',
             'connection_success' => $this->trans('Webservice connection tested successfully!', array(), 'Modules.AtomicSeller.Admin'),
-            'connection_error' => $this->trans('Oops... looks like an error occurred on WebService connection!', array(), 'Modules.AtomicSeller.Admin'),
-            'psre_success' => $this->trans('Configuration updated successfully!', array(), 'Modules.AtomicSeller.Admin'),
             'active_error' => $this->trans('Oops... looks like an error occurred!', array(), 'Modules.AtomicSeller.Admin'),
+            'psre_success' => $this->trans('Configuration updated successfully!', array(), 'Modules.AtomicSeller.Admin'),
         ));
     }
 
