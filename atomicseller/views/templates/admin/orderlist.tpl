@@ -33,7 +33,7 @@
                                 </th>
                                 <th>
                                     <button type="button" id="seachBtn">Search</button>
-                                    <button type="button" id="resetBtn" disabled="{if $reset_flag==false}{true}{else}{false}{/if}">Reset</button>
+                                    <button type="button" id="resetBtn">Reset</button>
                                 </th>
                             </tr>
                         </thead>
@@ -68,6 +68,10 @@
     $(document).ready(function() {
         $("#content").removeClass("nobootstrap");
         $("#content .bootstrap .page-head").append($("#atomicseller_panel"));
-        console.log({$data});
+        {if $reset_flag==false}
+            $("#resetBtn").disabled = true;
+        {else}
+            $("#resetBtn").disabled = false;
+        {/if}
     });
 </script>

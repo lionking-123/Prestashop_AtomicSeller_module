@@ -10,6 +10,13 @@ class AdminAtomicSellerController extends ModuleAdminController {
         parent::__construct();
     }
 
+    public function initContent() {
+        parent::initContent();
+
+        $params=array();
+        $this->context->smarty->assign($params);
+    }
+
     // Ajax response render
     protected function ajaxRenderJson($content) {
         header('Content-Type: application/json');
@@ -73,7 +80,7 @@ class AdminAtomicSellerController extends ModuleAdminController {
                 'customer_name' => $customer_name,
                 'reset_flag' => true,
             ));
-            $this->context->smarty->fetch(_PS_MODULE_DIR_.'atomicseller/views/templates/admin/orderlist.tpl');
+            $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/orderlist.tpl');
         }
 
         $this->ajaxRenderJson('success');

@@ -170,10 +170,7 @@ The customer service.');
                 || Tools::getValue('controller') == 'AdminAtomicSeller'))) {
             
             $params=array();
-            $sql = "SELECT o.id_order, CONCAT(LEFT(cu.`firstname`, 1), ' ', cu.`lastname`) AS `customer`, o.reference, o.current_state AS `status`, o.date_add AS DATE FROM ps_orders o LEFT JOIN ps_customer cu ON o.id_customer = cu.id_customer";
-            $sql .= " ORDER BY o.id_order DESC LIMIT 50";
-
-            $params = Db::getInstance()->executeS($sql);
+            
             $this->context->smarty->assign(array(
                 'data' => $params,
                 'order_ref' => "",
