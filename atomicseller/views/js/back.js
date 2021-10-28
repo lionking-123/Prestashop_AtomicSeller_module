@@ -35,3 +35,45 @@ $(document).on('click', '#saveEmailConf', function () {
         }
     });
 });
+
+$(document).on('click', '#seachBtn', function() {
+    var r = $("#order_ref").val();
+    var d = $("#order_date").val();
+    var s = $("#order_status").val();
+    var c = $("#customer_name").val();
+
+    $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: psr_controller_atomicseller_url,
+        data: {
+            action: 'SearchOrderList',
+            order_ref: r,
+            order_date: d,
+            order_status: s,
+            customer_name: c,
+        },
+        success: function (data) {
+            data ? console.log("Success") : console.log("Failed!");
+        }
+    });
+});
+
+$(document).on('click', '#resetBtn', function() {
+    $("#order_ref").val("");
+    $("#order_date").val("");
+    $("#order_status").val("");
+    $("#customer_name").val("");
+
+    $.ajax({
+        type: 'POST',
+        dataType: 'JSON',
+        url: psr_controller_atomicseller_url,
+        data: {
+            action: 'ResetOrderList'
+        },
+        success: function (data) {
+            data ? console.log("Success!") : console.log("Failed!");
+        }
+    });
+});

@@ -2,10 +2,97 @@
 
 class AdminAtomicSellerController extends ModuleAdminController {
 
+    public function __construct() {
+        $this->className = 'AtomicSeller';
+        $this->context = Context::getContext();
+        $this->bootstrap = true;
+
+        parent::__construct();
+    }
+
     // Ajax response render
     protected function ajaxRenderJson($content) {
         header('Content-Type: application/json');
         $this->ajaxRender(json_encode($content));
+    }
+
+    // Search Order List
+    public function displayAjaxSearchOrderList() {
+        $order_ref = Tools::getValue('order_ref');
+        $order_date = Tools::getValue('order_date');
+        $order_status = Tools::getValue('order_status');
+        $customer_name = Tools::getValue('customer_name');
+
+        $params = array();
+        $add_sql = "";
+        if($order_ref != "") {
+            $add_sql .= " WHERE `reference` LIKE '%" . $order_ref . "%'";
+        }
+
+        if($order_date != "") {
+            if($order_ref == "") {
+                $add_sql .= " WHERE `date` LIKE '%" . $order_date . "%'";
+            } else {
+                $add_sql .= " AND `date` LIKE '%" . $order_date . "%'";
+            }
+        }
+
+        if($order_status != "") {
+            $add_sql .= " HAVING `status` = '" . $order_status . "'";
+        }
+
+        if($customer_name != "") {
+            if($order_status == "") {
+                $add_sql .= " HAVING `customer` LIKE '%" . $customer_name . "%'";
+            } else {
+                $add_sql .= " AND `customer` LIKE '%" . $customer_name . "%'";
+            }
+        }
+
+        if($add_sql == "") {
+            $this->context->smarty->assign(array(
+                'data' => $params,
+                'order_ref' => "",
+                'order_date' => "",
+                'order_status' => "",
+                'customer_name' => "",
+                'reset_flag' => false,
+            ));
+            $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/orderlist.tpl');
+        } else {
+            $sql = "SELECT o.id_order, CONCAT(LEFT(cu.`firstname`, 1), ' ', cu.`lastname`) AS `customer`, o.reference, o.current_state AS `status`, o.date_add AS DATE FROM ps_orders o LEFT JOIN ps_customer cu ON o.id_customer = cu.id_customer";
+            $sql .= $add_sql;
+            $sql .= " ORDER BY o.id_order DESC LIMIT 50";
+
+            $params = Db::getInstance()->executeS($sql);
+            $this->context->smarty->assign(array(
+                'data' => $params,
+                'order_ref' => $order_ref,
+                'order_date' => $order_date,
+                'order_status' => $order_status,
+                'customer_name' => $customer_name,
+                'reset_flag' => true,
+            ));
+            $this->context->smarty->fetch(_PS_MODULE_DIR_.'atomicseller/views/templates/admin/orderlist.tpl');
+        }
+
+        $this->ajaxRenderJson('success');
+    }
+
+    // Reset Order List
+    public function displayAjaxResetOrderList() {
+        $params = array();
+        $this->context->smarty->assign(array(
+            'data' => $params,
+            'order_ref' => "",
+            'order_date' => "",
+            'order_status' => "",
+            'customer_name' => "",
+            'reset_flag' => false,
+        ));
+        $this->context->smarty->fetch(_PS_MODULE_DIR_.'atomicseller/views/templates/admin/orderlist.tpl');
+        
+        $this->ajaxRenderJson('success');
     }
 
     // Check Connection

@@ -91,6 +91,18 @@
     padding: 0 8px;
 }
 
+.atomicseller-panel {
+    position: relative;
+    overflow: hidden;
+    padding: 16px;
+    background: #eff1f2;
+    border-top: 1px #e2e4e5 solid;
+}
+
+.bootstrap .table thead>tr>th, .bootstrap .table tbody>tr>td {
+    vertical-align: middle !important;
+}
+
 .bootstrap label.control-label {
     padding: 6px 0px !important;
 }
