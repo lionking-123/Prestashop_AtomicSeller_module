@@ -57,7 +57,7 @@ class AtomicSeller extends Module {
 
     // Module install function
     public function install() {
-        Configuration::updateValue('WS_TOKEN', 'MIJIUGTIUY976R976F42UV087JIYUUYVO8GYPGLIE2PAB');
+        Configuration::updateValue('WS_TOKEN', 'MIJIUGTIUY976R976F42UV087G07G0875RF9762OUYVO8GYPGLIE2PAB');
         Configuration::updateValue('WS_STOREKEY', 'MYSTORE');
         Configuration::updateValue('EMAIL_TITLE_MODEL', 'Return label regarding order MKUGH1.');
         Configuration::updateValue('EMAIL_CONTENT_MODEL', 'Dear customer,
@@ -179,7 +179,7 @@ The customer service.');
                 'customer_name' => "",
                 'reset_flag' => false,
             ));
-            return $this->context->smarty->fetch($this->local_path.'views/templates/admin/orderlist.tpl');
+            return $this->display(__FILE__, 'views/templates/admin/orderlist.tpl');
         }
     }
 }

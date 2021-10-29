@@ -93,10 +93,15 @@
 
 .atomicseller-panel {
     position: relative;
-    overflow: hidden;
     padding: 16px;
     background: #eff1f2;
     border-top: 1px #e2e4e5 solid;
+    overflow: auto;
+    max-height: 80vh;
+}
+
+#orderDetail table tr > td {
+    padding : 3px 7px !important;
 }
 
 .bootstrap .table thead>tr>th, .bootstrap .table tbody>tr>td {

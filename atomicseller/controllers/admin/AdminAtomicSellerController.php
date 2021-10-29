@@ -15,6 +15,7 @@ class AdminAtomicSellerController extends ModuleAdminController {
 
         $params=array();
         $this->context->smarty->assign($params);
+        // $this->ajax = true;
     }
 
     // Ajax response render
@@ -36,14 +37,6 @@ class AdminAtomicSellerController extends ModuleAdminController {
             $add_sql .= " WHERE `reference` LIKE '%" . $order_ref . "%'";
         }
 
-        if($order_date != "") {
-            if($order_ref == "") {
-                $add_sql .= " WHERE `date` LIKE '%" . $order_date . "%'";
-            } else {
-                $add_sql .= " AND `date` LIKE '%" . $order_date . "%'";
-            }
-        }
-
         if($order_status != "") {
             $add_sql .= " HAVING `status` = '" . $order_status . "'";
         }
@@ -56,40 +49,23 @@ class AdminAtomicSellerController extends ModuleAdminController {
             }
         }
 
-        if($add_sql == "") {
-            $this->context->smarty->assign(array(
-                'data' => $params,
-                'order_ref' => "",
-                'order_date' => "",
-                'order_status' => "",
-                'customer_name' => "",
-                'reset_flag' => false,
-            ));
-            $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/orderlist.tpl');
-        } else {
-            $sql = "SELECT o.id_order, CONCAT(LEFT(cu.`firstname`, 1), ' ', cu.`lastname`) AS `customer`, o.reference, o.current_state AS `status`, o.date_add AS DATE FROM ps_orders o LEFT JOIN ps_customer cu ON o.id_customer = cu.id_customer";
+        if($order_date != "") {
+            if($order_status == "" && $customer_name == "") {
+                $add_sql .= " HAVING DATE(`date`) = '" . $order_date . "'";
+            } else {
+                $add_sql .= " AND DATE(`date`) = '" . $order_date . "'";
+            }
+        }
+
+        if($add_sql != "") {
+            $sql = "SELECT o.id_order, CONCAT(LEFT(cu.`firstname`, 1), ' ', cu.`lastname`) AS `customer`, o.reference, o.current_state AS `status`, o.date_add AS `date` FROM ps_orders o LEFT JOIN ps_customer cu ON o.id_customer = cu.id_customer";
             $sql .= $add_sql;
             $sql .= " ORDER BY o.id_order DESC LIMIT 50";
 
             $params = Db::getInstance()->executeS($sql);
-            $this->context->smarty->assign(array(
-                'data' => $params,
-                'order_ref' => $order_ref,
-                'order_date' => $order_date,
-                'order_status' => $order_status,
-                'customer_name' => $customer_name,
-                'reset_flag' => true,
-            ));
-            $this->context->smarty->fetch(_PS_MODULE_DIR_ . $this->module->name . '/views/templates/admin/orderlist.tpl');
         }
 
-        $this->ajaxRenderJson('success');
-    }
-
-    // Reset Order List
-    public function displayAjaxResetOrderList() {
-        $params = array();
-        $this->context->smarty->assign(array(
+        $this->ajaxRenderJson(array(
             'data' => $params,
             'order_ref' => "",
             'order_date' => "",
@@ -97,9 +73,6 @@ class AdminAtomicSellerController extends ModuleAdminController {
             'customer_name' => "",
             'reset_flag' => false,
         ));
-        $this->context->smarty->fetch(_PS_MODULE_DIR_.'atomicseller/views/templates/admin/orderlist.tpl');
-        
-        $this->ajaxRenderJson('success');
     }
 
     // Check Connection
@@ -110,11 +83,21 @@ class AdminAtomicSellerController extends ModuleAdminController {
         Configuration::updateValue('WS_TOKEN', $wToken);
         Configuration::updateValue('WS_STOREKEY', $wStorekey);
 
-        $result = $this->testConnection($wToken, $wStorekey, "KKHSHWEJR") == "" ? false : true;
-        $this->ajaxRenderJson($result ? 'success' : 'error');
+        $res = $this->testConnection($wToken, $wStorekey, "KKHSHWEJR");
+        $this->ajaxRenderJson($res['Header']['StatusCode'] == 200 ? 'success' : 'error');
     }
 
-    // Check Connection
+    // Get Return Label from Web service
+    public function displayAjaxGetReturnLabel() {
+        $wToken = Configuration::get('WS_TOKEN');
+        $wStorekey = Configuration::get('WS_STOREKEY');
+        $wOKey = Tools::getValue('orderKey');
+
+        $res = $this->testConnection($wToken, $wStorekey, $wOkey);
+        $this->ajaxRenderJson($res);
+    }
+
+    // Check Email Settings
     public function displayAjaxSaveEmailConf() {
         $eTitle = Tools::getValue('eTitle');
         $eContent = Tools::getValue('eContent');
@@ -126,6 +109,34 @@ class AdminAtomicSellerController extends ModuleAdminController {
         }
 
         $this->ajaxRenderJson($result ? 'success' : 'error');
+    }
+
+    // Email Sending
+    public function displayAjaxEmailSendToCustomer() {
+        $eCont = Tools::getValue('eContent');
+        $ref = Tools::getValue('order_ref');
+
+        Mail::Send(
+            (int)(Configuration::get('PS_LANG_DEFAULT')),
+            'contact',
+            'Return label regarding order ' . $ref,
+            array(
+                '{email}' => 'alexeygrigorev91@gmail.com',
+                '{message}' => 'Dear customer,
+
+                ' . $eCont . '.
+                
+                Kind regards
+                The customer service
+                '
+            ),
+            'Pershin.alexey@list.ru',
+            'Pershin Alexey',
+            'alexeygrigrev91@gmail.com',
+            NULL
+        );
+
+        $this->ajaxRenderJson('success');
     }
 
     public function testConnection($wToken, $wSkey, $wOkey) {
@@ -144,12 +155,12 @@ class AdminAtomicSellerController extends ModuleAdminController {
         $data = <<<DATA
         {
            "Header":{
-              "Token": $wToken
+              "Token": "$wToken"
            },
            "Orders":[
               {
-                 "OrderKEY": $wOkey,
-                 "StoreKEY": $wSkey
+                 "OrderKEY": "$wOkey",
+                 "StoreKEY": "$wSkey"
               }
            ] 
         }
@@ -161,10 +172,10 @@ class AdminAtomicSellerController extends ModuleAdminController {
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 
-        $resp = json_encode(curl_exec($curl));
-        $statusCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $resp = curl_exec($curl);
         curl_close($curl);
 
-        return $statusCode == 200 ? $resp : "";
+        $res = json_decode($resp, true);
+        return $res;
     }
 }
